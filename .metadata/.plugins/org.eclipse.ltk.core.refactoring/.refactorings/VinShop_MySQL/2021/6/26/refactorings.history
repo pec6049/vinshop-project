@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;VinShop_MySQL/src/main/webapp/WEB-INF/views/admin/authorEnroll.jsp&apos; to &apos;goodsEnroll.jsp&apos;" description="Rename resource &apos;authorEnroll.jsp&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/main/webapp/WEB-INF/views/admin/authorEnroll.jsp" name="goodsEnroll.jsp" stamp="1624513786416" updateReferences="true"/>
+</session>

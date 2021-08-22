@@ -1,0 +1,640 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>VinShop</title>
+<link rel="stylesheet" href="../resources/css/purchase/preBuy.css">
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>  
+</head>
+<body>
+
+	<div class="wrapper">
+		<div class="wrap">
+			<div class="top_gnb_area">
+				<div class="logo_area">
+					<a href="/main"><img src="../resources/img/VS_logo.png"></a>
+				</div>
+				<ul class="list">
+					<c:if test = "${member == null}">
+		                <li >
+		                    <a href="../member/login">로그인</a>
+		                </li>
+		                <li>
+		                    <a href="../member/join">회원가입</a>
+		                </li>
+	                </c:if>
+	                <c:if test="${member != null }">
+	                	<c:if test="${member.adminCk == 1 }">
+	                        <li><a href="../admin/main">관리자 페이지</a></li>
+	                    </c:if>                
+	                    <li>
+	                        <a id="gnb_logout_button">로그아웃</a>
+	                    </li>
+	                    <li>
+	                        <a href="/myRoom/main">마이룸</a>
+	                    </li>
+	                    <li>
+	                        <a href="/order/cart">장바구니</a>
+	                    </li>
+	                </c:if> 
+	                <li>
+	                    <a href="/board/list">고객센터</a>
+	                </li>            
+	            </ul>
+			</div>
+	
+			<div class="navi_bar_area">
+				<ul class="list">
+					<li>
+						<a href="/menu/all">ALL</a>
+	                </li>
+					<li>
+						<a href="/menu/outer">OUTER</a>
+	                </li>
+	                <li>
+	                	<a href="/menu/top">TOP</a>
+	                </li>
+	                <li>
+	                	<a href="/menu/bottom">BOTTOM</a>
+	                </li>
+	                <li>
+	                	<a href="/menu/onepiece">ONEPIECE</a>
+	                </li>
+	                <li>
+	                	<a href="/menu/shoesbags">SHOES&BAGS</a>
+	                </li>
+	                <li>
+	                	<a href="/menu/acc">ACC</a>
+	                </li>
+				</ul>
+			</div>
+			
+			<!-- 주문정보 출력 영역 -->
+			<div class="content_area">
+				<div class="content_subject">
+					<span>ORDER SHEET</span>
+				</div>
+				<div class="content_container">
+					<form method="post" action="/purchase/buy" id="buy_form">
+						<div class="main_prebuy">
+							<div class="main_list">
+								<div class="main_list_subject">
+									<span>주문상품</span>
+								</div>
+								<table>
+									<thead>
+										<tr id="firstrow">
+											<td class="main_list_head_col1" colspan="2">
+												상품정보
+											</td>
+											<td class="main_list_head_col2">
+												판매가
+											</td>
+											<td class="main_list_head_col3">
+												수량
+											</td>
+											<td class="main_list_head_col4">
+												합계
+											</td>
+										</tr>
+									</thead>
+									<tbody>
+										<c:set var="i" value="0"/> 
+										<!-- 가격 총합 -->
+										<c:set var="finalTotalPrice" value="0"/>
+										<c:forEach items="${buylist}" var="list">
+										<tr>
+											<td id="main_list_col1${i}" class="main_list_col1" >
+											<input type="hidden" id="vinId${i}" value="${list.vinId}">
+												이미지
+												<script>
+												/* 상품 이미지 가져오기 */
+											    (function(){
+													var vinId = $("#vinId${i}").val();
+													
+													//alert(vinId);
+													$.getJSON("/getPcover",{vinId:vinId}, function(arr){
+														console.log(arr);
+														
+														var str = "";
+														$(arr).each(function(i, attach){
+														
+															var fileCallPath = encodeURIComponent(attach.uploadPath + "/s_" + attach.uuid + "_" + attach.fileName);
+															
+															str += "<img src='/display?fileName=" + fileCallPath + "'>";
+															
+															return false;
+														});
+														$("#main_list_col1${i}").html(str);
+														
+													});// end getJSON
+												})();// end function
+												</script>
+											</td>
+											<td class="main_list_col2">
+												${list.vinName}
+												상품이름		
+											</td>
+											<td class="main_list_col3">
+												<!-- 각 제품의 할인된가격 총합 -->
+												<c:set var="discountPrice" value="0"/>
+												<!-- 할인된가격 * 수량 -->
+												<c:set var="discountPriceStock" value="0"/>
+												
+												<c:set var="discountPrice" value="${list.vinPrice * (1-list.vinDiscount)} "/>
+												<c:set var="discountPriceStock" value="${(list.vinPrice * (1-list.vinDiscount)) * list.cartStock }"/>
+												 
+												<div><strong>${discountPrice}</strong>원</div>
+											</td>
+											<td class="main_list_col4">
+												수량 ${list.cartStock}개
+											</td>
+											<td class="main_list_col5">
+												${list.vinPrice * list.cartStock}원
+												<c:set var="finalTotalPrice" value="${finalTotalPrice + discountPriceStock}"/>
+											</td>
+										</tr>
+											<input type="hidden" name="oDetail[${i }].vinId" value="${list.vinId}">
+											<input type="hidden" name="oDetail[${i }].amount" value="${list.cartStock}">
+											<input type="hidden" name="cartId" value="${list.cartId}">
+										<c:set var="i" value="${i+1}" />
+										</c:forEach>
+									</tbody>
+								</table>
+							</div>
+							<div class="main_buy_info">
+								<div class="main_buy_info_subject">
+									<span>구매자 정보</span>
+								</div>
+								<table>
+									<colgroup>
+										<col width="30%">
+										<col width="*">
+									</colgroup>
+									<tr>
+										<th id="col1">
+											주문자
+										</th>
+										<td id="col2">
+											${memberinfo.memberName}
+										</td>
+									</tr>
+									<tr>
+										<th id="col1">
+											주소
+										</th>
+										<td id="col2">
+											${memberinfo.memberAddr1}
+											<br>
+											${memberinfo.memberAddr2}
+											<br>
+											${memberinfo.memberAddr3}
+										</td>
+									</tr>
+									<tr>
+										<th id="col1">
+											휴대폰번호
+										</th>
+										<td id="col2">
+											${memberinfo.memberPhone}
+										</td>
+									</tr>
+									<tr>
+										<th id="col1">
+											이메일
+										</th>
+										<td id="col2">
+											${memberinfo.memberMail}
+										</td>
+									</tr>
+								</table>
+							</div>
+							<div class="main_buy_addr">
+								<div class="main_buy_addr_subject">
+									<span>배송정보</span>
+								</div>
+								<div class="main_buy_addr_button">
+									<ul>
+										<li>
+											<a class="addr_button1" id="addr_button_save">저장 주소</a>
+										</li>
+										<li>
+											<a class="addr_button2" id="addr_button_insert">직접입력</a>
+										</li>
+									</ul>
+								</div>
+								<div id="main_buy_addr_info1" class="main_buy_addr_info1">
+									<div id="main_buy_addr_info1_1">
+										받는 사람 : ${memberinfo.memberName}
+										<input type="hidden" name="orderRec" value="${member.memberName}">
+									</div>
+									<div id="main_buy_addr_info1_2">
+										휴대전화  : ${memberinfo.memberPhone }
+										<input type="hidden" name="orderPhone" value="${memberinfo.memberPhone}">
+									</div>
+									<div id="main_buy_addr_info1_3">
+										주소 : (${memberinfo.memberAddr1}) ${memberinfo.memberAddr2} ${memberinfo.memberAddr3}
+										<input type="hidden" name="memberAddr1" value="${memberinfo.memberAddr1 }">
+										<input type="hidden" name="memberAddr2" value="${memberinfo.memberAddr2 }">
+										<input type="hidden" name="memberAddr3" value="${memberinfo.memberAddr3 }"> 
+									</div>
+								</div>
+								<div id="main_buy_addr_info2" class="">
+
+								</div>
+							</div>
+							<div class="main_buy_point">
+								<div class="main_buy_point_subject">
+									할인적립
+								</div>
+								<table>
+									<tr>
+										<th>사용가능 포인트</th>
+										<td>
+											<span>${member.point}</span>원
+											<input type="hidden" id="ownPoint" value="${member.point}">
+											<input id="point_input" type="text" value="0">원
+											<a id="point_btn1">모두사용</a>
+											<a id="point_btn2">사용취소</a>
+										</td>
+									</tr>
+								</table>
+							</div>
+							<div class="main_buy">
+								<div class="main_buy_subject">
+									<span>결제정보</span>
+								</div>
+								<ul>
+									<li class="totalPrice">
+										<span id="label">상품금액</span> <span id="label_result">${finalTotalPrice}원</span>
+										<input type="hidden" id="titalPriceInput"value="${finalTotalPrice}">
+										<input type="hidden" id="totalPrice" name="totalPrice" value="${finalTotalPrice}">
+										<div class="clearfix"></div> 
+									</li>
+									<li class="shipPrice">
+										<c:if test="${finalTotalPrice >= 30000}">
+											<c:set var="shipPrice" value="0"/> 
+											<input type="hidden" id="shipPriceInput" value="0">
+										</c:if>
+										<c:if test="${finalTotalPrice < 30000}">
+											<c:set var="shipPrice" value="2000"/>
+											<input type="hidden" id="shipPriceInput" value="2000"> 
+										</c:if>
+									
+										<span id="label">배송비</span>  <span id="label_result">${shipPrice}원</span>
+										<input type="hidden" name="shipPrice" value="${shipPrice}">
+										<div class="clearfix"></div> 
+									</li>
+									<li class="sale_price">
+										<span id="label">할인금액</span>  <span id="label_result"><span id="number"></span>원</span>
+										<input type="hidden" id="sale_priceInput" name="usePoint" value="0">
+										<div class="clearfix"></div> 
+									</li>
+									<li class="total_li">
+										<c:set var="finalTotalPrice" value="${finalTotalPrice+shipPrice }"/>
+										<strong id="label">최종 결제금액</strong> <strong id="label_result"><span id="number"><fmt:formatNumber value="${finalTotalPrice}" pattern="#,###"/></span>원</strong>
+										<fmt:parseNumber value="${finalTotalPrice}" integerOnly="true" var="finalTotalPrice" />
+										
+										<div class="clearfix"></div> 
+									</li>
+								</ul>
+							</div>
+							<div class="final_buy_check">
+								<input type="checkbox">주문내역 확인 동의 <필수>
+							</div>
+							<div class="btn_section">
+								<input type="hidden" name="memberId" value="${member.memberId}">
+								<button id="buyBtn" class="btn buy_btn">결제하기</button>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+					</form>
+				</div> <!-- content_container -->
+			</div>
+			
+			<!-- Footer 영역 -->
+			<div class="footer_nav">
+				<div class="footer_nav_container">
+					<ul>
+						<li>
+							<a href="/shopinfo/aboutus">ABOUT US</a>
+						</li>
+						<span class="line">|</span>
+						<li>
+							<a href="/shopinfo/agreement">AGREEMENT</a>
+						</li>
+						<span class="line">|</span>
+						<li>
+							<a href="/shopinfo/policy">PRIVACY POLICY</a>
+						</li>
+					</ul>
+				</div>
+			</div> <!-- class="footer_nav" -->
+			
+			<div class="footer">
+				<div class="footer_container">
+					<div class="footer_customer">
+						CUSTOMER CENTER
+						<br>
+						<br>
+						<strong>010-1234-1234</strong>
+						<br>
+						MON-FRI 10:00~17:30		LUNCH 12:00~13:00
+						<br>
+						SAT / SUN / HOLIDAY CLOSE
+					</div>
+					<div class="footer_bank">
+						BANK INFO
+						<br>
+						<br>
+						신한 : 110-123-456789
+						<br>
+						농협 : 312-1234-1234-12
+						<br>
+						<strong>예금주 : 박은채</strong>
+					</div>
+					<div class="footer_addr">
+						RETURN & EXCHANGE
+						<br>
+						<br>
+						서울특별시 강남구 압구정로 5-25
+						<br>
+						CJ대한통운(1588-1255)
+					</div>
+				</div>
+			</div> <!-- class="footer" -->
+			<div class="footer_bottom">
+				<div class="footer_copy">
+					COMPANY : VINSHOP / OWNER : 박은채 / ADDRESS : 06000 서울특별시 강남구 압구정로 5-25
+					<br>
+					CALL : 010-1234-1234 / E-MAIL : pec6049@naver.com / BUSINESS LICENSE : 123-45-67890 / MALL ORDER LICENSE : 제2021-서울특별시-0000
+					<br>
+					COPYRIGHT © VINSHOP ALL RIGHTS RESERVED.
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			
+		</div>	<!-- class="wrap" -->
+	</div>	<!-- class="wrapper" -->
+	
+	<div id="save">
+		<div id="save1">
+			<div id="main_buy_addr_info1_1">
+				받는 사람 : ${memberinfo.memberName} 
+				<input type="hidden" name="orderRec" value="${member.memberName }">
+			</div>
+			<div id="main_buy_addr_info1_2">
+				휴대전화  : ${memberinfo.memberPhone }
+				<input type="hidden" name="orderPhone" value="${memberinfo.memberPhone}">
+			</div>
+			<div id="main_buy_addr_info1_3">
+				주소 : (${memberinfo.memberAddr1}) ${memberinfo.memberAddr2} ${memberinfo.memberAddr3}
+				<input type="hidden" name="memberAddr1" value="${memberinfo.memberAddr1 }">
+				<input type="hidden" name="memberAddr2" value="${memberinfo.memberAddr2 }">
+				<input type="hidden" name="memberAddr3" value="${memberinfo.memberAddr3 }"> 
+			</div>
+		</div>
+		<div id="save2">
+			<table>
+				<colgroup>
+					<col width="30%">
+					<col width="*">
+				</colgroup>
+				<tr class="receiver_row_name">
+					<th>
+						받는이
+					</th>
+					<td>
+						<input type="text" name="orderRec" >
+					</td>
+				</tr>
+				<tr class="receiver_row_phone">
+					<th>
+						휴대전화
+					</th>
+					<td>
+						<input type="text" name="orderPhone">
+					</td>
+				</tr>
+				<tr class="receiver_row_addr">
+					<th>
+						주소록
+					</th>
+					<td>
+						<input id="receiver_row_addr_input1" type="text" readonly="readonly" name="memberAddr1"> <a onclick="execution_daum_address()">우편번호</a>
+						<br>
+						<input id="receiver_row_addr_input2" type="text" readonly="readonly" name="memberAddr2">
+						<br>
+						<input id="receiver_row_addr_input3" type="text" name="memberAddr3">
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+			
+	<script>
+	
+    /* gnb_area 로그아웃 버튼 작동 */
+    $("#gnb_logout_button").click(function(){
+        $.ajax({
+            type:"POST",
+            url:"/member/logout.do",
+            success:function(data){
+                //alert("로그아웃 성공");
+                document.location.reload();    //새로고침 
+            } 
+        }); 
+    });
+    
+    $(document).ready(function(){
+    	
+    	//구매버튼 
+    	$("#buyBtn").on("click",function(e){
+    		e.preventDefault()
+    		
+    		$(this).css("disabled", "false");
+    		
+    		var finalck = false;
+    		var check = $('.final_buy_check>input').prop("checked");
+    		
+    		if(check){
+    			$('#buy_form').submit();
+    		} else {
+    			alert("주문내역 확인 동의를 체크해주세요.")
+    		}
+    	});
+    	
+    	// 배송정보 선택
+   		// 저장주소
+   		$(".addr_button1").click(function(){
+   			var save1 = $('#save1').html();
+   			$("#main_buy_addr_info1").html(save1);
+   			$("#main_buy_addr_info1").attr("class", "main_buy_addr_info1");
+   			$("#main_buy_addr_info2").html("");
+   			$("#main_buy_addr_info2").attr("class", "");
+   			$("#addr_button_save").attr("class", "addr_button1")
+   			$("#addr_button_insert").attr("class", "addr_button2")
+   		});
+   	
+   		// 직접입력
+   		$(".addr_button2").click(function(){
+   			var save2 = $('#save2').html();
+   			$("#main_buy_addr_info1").html("");
+   			$("#main_buy_addr_info1").attr("class", "");
+   			$("#main_buy_addr_info2").html(save2);
+   			$("#main_buy_addr_info2").attr("class", "main_buy_addr_info2");
+   			$("#addr_button_save").attr("class", "addr_button2")
+   			$("#addr_button_insert").attr("class", "addr_button1")
+   		})
+   		
+   		/* 최종 결제 금액 */
+   		//point input  변화시 결과창 할인금액 값 변동
+		$('#point_input').on("propertychange change keyup paste input",function(){
+			var inValue = $("#point_input").val();
+			 if (/\D/.test(this.value)) {
+			        this.value = this.value.replace(/\D/g, '')
+			        alert('숫자만 입력가능합니다.');
+			    }
+			  if (parseInt(this.value) > parseInt($('#ownPoint').val())) {
+			      this.value = $('#ownPoint').val();
+			      alert($('#ownPoint').val()+'까지만 가능합니다.');
+			  }
+			
+			$(".sale_price>#label_result>#number").html(inValue);
+			$(".sale_price>input").val(inValue);
+			
+			var totalPrice = $("#titalPriceInput").val();
+			totalPrice = parseInt(totalPrice);
+			
+			var shipPrice = $(".shipPrice input").val();
+			shipPrice = parseInt(shipPrice);
+			
+			var sale_price = $(".sale_price input").val();
+			sale_price = parseInt(sale_price);
+			
+			var finalTotalPrice = totalPrice + shipPrice - sale_price;
+			
+			var IntegerTotalPrice = parseInt(finalTotalPrice)
+			
+			$(".total_li #label_result>#number").html(finalTotalPrice.toLocaleString());
+			$("#sale_priceInput").attr("value", sale_price);
+			
+		});
+		
+		//모두사용버튼
+		$('#point_btn1').on('click',function(){
+			var inValue = $("#point_input").val();
+			var ownValue = $("#ownPoint").val();
+			$('#point_btn1').css("display", "none");
+			$('#point_btn2').css("display","inline-block");
+			$("#point_input").val(ownValue);
+			$(".sale_price>#label_result>#number").html(ownValue);
+			$(".sale_price>input").val(ownValue);
+			
+			var totalPrice = $("#titalPriceInput").val();
+			
+			var totalPrice = $("#titalPriceInput").val();
+			totalPrice = parseInt(totalPrice);
+			
+			var shipPrice = $(".shipPrice input").val();
+			shipPrice = parseInt(shipPrice);
+			
+			var sale_price = $(".sale_price input").val();
+			sale_price = parseInt(sale_price);
+			
+			var finalTotalPrice = totalPrice + shipPrice - sale_price;
+			
+			var IntegerTotalPrice = parseInt(finalTotalPrice)
+			
+			$(".total_li #label_result>#number").html(finalTotalPrice.toLocaleString());
+			$("#sale_priceInput").attr("value", sale_price);
+		});
+		// 사용취소 버튼
+		$('#point_btn2').on('click',function(){
+			var inValue = $("#point_input").val();
+			$('#point_btn1').css("display", "inline-block");
+			$('#point_btn2').css("display","none");
+			$("#point_input").val(0);
+			$(".sale_price>#label_result>#number").html(0);
+			$(".sale_price>input").val(0);
+			
+			var totalPrice = $("#titalPriceInput").val();
+			
+			var totalPrice = $("#titalPriceInput").val();
+			totalPrice = parseInt(totalPrice);
+			
+			var shipPrice = $(".shipPrice input").val();
+			shipPrice = parseInt(shipPrice);
+			
+			var sale_price = $(".sale_price input").val();
+			sale_price = parseInt(sale_price);
+			
+			var finalTotalPrice = totalPrice + shipPrice - sale_price;
+			
+			var IntegerTotalPrice = parseInt(finalTotalPrice)
+			
+			$(".total_li #label_result>#number").html(finalTotalPrice.toLocaleString());
+			$("#sale_priceInput").attr("value", sale_price);
+		});
+		
+    });
+	
+    /* 다음 주소 연동 */
+	function execution_daum_address(){
+		
+	    new daum.Postcode({
+	        oncomplete: function(data) {
+	            
+	            var addr = ''; // 주소 변수
+	            var extraAddr = ''; // 참고항목 변수
+	            
+	            //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+	            if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+	                addr = data.roadAddress;
+	            } else { // 사용자가 지번 주소를 선택했을 경우(J)
+	                addr = data.jibunAddress;
+	            }
+	            // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+	            if(data.userSelectedType === 'R'){
+	                // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+	                // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+	                if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+	                    extraAddr += data.bname;
+	                }
+	                // 건물명이 있고, 공동주택일 경우 추가한다.
+	                if(data.buildingName !== '' && data.apartment === 'Y'){
+	                    extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+	                }
+	                // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+	                if(extraAddr !== ''){
+	                    extraAddr = ' (' + extraAddr + ')';
+	                }
+	                // 주소변수 문자열과 참고항목 문자열 합치기
+	      			addr += extraAddr;
+	            
+	            } else {
+	                addr += ' ';
+	            }
+	            // 우편번호와 주소 정보를 해당 필드에 넣는다.
+	            $("#receiver_row_addr_input1").val(data.zonecode);
+	            //$("[name=memberAddr1]").val(data.zonecode);	// 대체가능
+	            $("#receiver_row_addr_input2").val(addr);
+	            //$("[name=memberAddr2]").val(addr);			// 대체가능
+	            // 상세주소 입력란 disabled 속성 변경 및 커서를 상세주소 필드로 이동한다.
+	            $("#receiver_row_addr_input3").attr("readonly",false);
+	            $("#receiver_row_addr_input3").focus();
+	        }
+	    }).open();   
+	}
+    
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,8 @@
+INDEX VERSION 1.4+C:\Users\PC\Desktop\vinshop-project\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+723688592.index
+141665354.index
+2615852055.index
+1034952817.index
+1811178556.index
+2820309595.index
+879677536.index

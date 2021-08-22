@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.vinshopmysql.mapper.AdminMapper">
+
+	<!-- 상품 등록 -->
+  	<insert id="vinEnroll">
+  		<selectKey resultType="int" keyProperty="vinId" order="AFTER">
+  			SELECT LAST_INSERT_ID()
+  		</selectKey>
+  		
+  		insert into vin_clothes(vinName, cateCode, vinPrice, vinStock, vinDiscount, vinInfo)
+		values(#{vinName},#{cateCode},#{vinPrice},#{vinStock},#{vinDiscount},#{vinInfo})
+  	</insert>
+
+	<!-- 카테고리 리스트 -->
+  	<select id="cateList" resultType="com.vinshopmysql.model.CateVO">
+  		select * from vin_cate order by catecode
+  	</select>
+  	
+  	<!-- 상품 리스트 -->
+	<select id="goodsGetList" resultType="com.vinshopmysql.model.ClothesVO">
+		select vinId, vinName, b.cateName, vinStock, a.regDate
+		from vin_clothes a
+		left outer join vin_cate b on a.cateCode = b.cateCode
+		<if test="keyword != null">
+			where (vinName like concat ('%', #{keyword}, '%'))
+		</if>
+		order by vinId desc 
+		limit #{skip}, #{amount}
+	</select>
+  	
+  	<!-- 상품 총 갯수 -->
+  	<select id="goodsGetTotal" resultType="int">
+  		select count(*) from vin_clothes
+  		<if test="keyword != null">
+  			where vinName like concat('%' , #{keyword}, '%')
+  		</if>
+  	</select>
+  	
+  	<!-- 상품 조회 페이지 -->
+	<select id="goodsGetDetail" resultType="com.vinshopmysql.model.ClothesVO">
+		select vinId, vinName, cateCode, vinPrice, vinStock, vinDiscount, vinInfo, regDate, updateDate 
+		from vin_clothes where vinId = #{vinId}
+	</select>
+
+	<!-- 상품 정보 수정 -->
+	<update id="goodsModify">
+		update vin_clothes set vinName = #{vinName}, cateCode = ${cateCode}, vinPrice = #{vinPrice}, 
+		vinStock = #{vinStock}, vinDiscount = #{vinDiscount}, vinInfo = #{vinInfo}, updateDate = now()
+		where vinId = ${vinId}
+	</update>
+	
+	<!-- 상품 정보 삭제 -->
+	<delete id="goodsDelete">
+		delete from vin_clothes where vinId = #{vinId}
+	</delete>
+	
+	<!-- 이미지 등록 -->
+	<insert id="imageEnroll">
+		insert into vin_image(vinId, fileName, uploadPath, uuid) values (#{vinId}, #{fileName}, #{uploadPath}, #{uuid})
+	</insert>
+	
+	<!-- 지정 상품 이미지 전체 삭제 --> 
+	<delete id="deleteImageAll">
+		delete FROM vin_image where vinId = #{vinId}
+	</delete>
+	
+	<!-- 어제자 날자 이미지 리스트 -->
+	<select id="checkFileList" resultType="com.vinshopmysql.model.AttachImageVO">
+		select * from vin_image where uploadpath = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -1 DAY), '%Y\%m\%d')
+	</select>
+	
+	<!-- 지정 상품 이미지 정보 얻기 -->
+	<select id="getAttachInfo" resultType="com.vinshopmysql.model.AttachImageVO">
+		select * from vin_image where vinId = #{vinId}
+	</select>
+	
+	<!-- 회원 목록 -->
+    <select id="memberGetList" resultType="com.vinshopmysql.model.MemberVO">
+        select memberId, memberName, memberMail, regDate
+        from vin_member
+        <if test="keyword != null">
+            where memberName like concat('%',#{keyword}, '%')
+        </if>
+        order by memberId desc 
+        limit #{skip}, #{amount}
+    </select>
+    
+    <!-- 회원 총 수 -->
+  	<select id="memberGetTotal" resultType="int">
+  		select count(*) from vin_member
+  		<if test="keyword != null">
+  			where memberName like concat('%' , #{keyword}, '%')
+  		</if>
+  	</select>
+  	
+  	<!-- 관리자 페이지 주문목록 리스트 페이징 -->
+	<select id="orderList" resultType="com.vinshopmysql.model.OrderVO">
+		select * from
+			(select @rownum:=@rownum+1 as rownum, orderId, memberId, orderRec, memberAddr1, memberAddr2, memberAddr3, orderPhone, orderDate, shipPrice, totalPrice, 
+			(select definition from vin_order_state where vin_order_state.orderState = vin_order.orderState) as state
+			,shipDate, clearDate 
+		from (select @rownum:=0) as rownum, vin_order 
+		order by orderDate desc) vin_order
+		<![CDATA[ where rownum >(#{pageNum}-1)*#{amount} and rownum<=#{pageNum}*#{amount}; ]]>
+	</select>
+	
+	<!-- 관리자페이지 주문 목록 count -->
+	<select id="orderCount" resultType="int">
+		select count(*) from vin_order;
+	</select>
+  	
+  </mapper>

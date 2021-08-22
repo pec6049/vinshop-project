@@ -1,0 +1,250 @@
+@charset "UTF-8";
+*{
+	margin: 0;
+	padding:0;
+}
+a{
+	color: black;
+	text-decoration : none;
+}
+/* 화면 전체 렙 */
+.wrapper{
+	width: 100%;
+}
+/* content 랩 */
+.wrap{
+	width : 1080px;
+	margin: auto;
+}
+
+/* 홈페이지 기능 네비 */ 
+.top_gnb_area{
+	width: 100%;
+    height: 50px;
+    position:relative;
+}
+/* 로고 영역 */
+.logo_area{
+    width: 25%;
+    height: 100%;
+    float: left;
+}
+
+.logo_area img{
+    width: 35%;
+    height: 100%;
+}
+.top_gnb_area .list{
+    position: absolute;
+    top: 0px;
+    right: 0;
+    font-size: 14px;
+}
+.top_gnb_area .list li{
+    list-style: none;
+    float : left;
+    padding: 13px 15px 0 10px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+/* 상품 목록 네비 */
+.navi_bar_area{
+	width: 100%;
+    height: 70px;
+    border-bottom: 1px solid #222;
+}
+.navi_bar_area .list{
+    position: absolute;
+    top: 70px;
+}
+.navi_bar_area .list li{
+    list-style: none;
+    float : left;
+    padding: 13px 15px 0 10px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* 게시판 등록 영역  */
+.content_area{
+	width: 100%;
+    height: 1000px;
+}
+.content_subject {
+	font-size: 30px;
+    font-weight: 600;
+    text-align: center;
+    height: 80px;
+    margin-top: 20px;
+}
+.content_wrap {
+	width: 100%;
+	text-align: center;
+	
+}
+.form_section {
+	width: 100%;
+	border: 1px solid #222;
+}
+.form_section_content{
+	padding: 20px 35px;	
+}
+.form_section_content input{
+	width: 98%;
+    height: 25px;
+    font-size: 20px;
+    padding: 5px 1%;
+}
+table {
+	border-collapse: collapse;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+}
+th {
+	border-right: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	height: 50px;
+	font-size : 14px;
+}
+td {
+	border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding: 8px 10px 7px;
+    font-size: 14px;
+}
+thead {
+	font-weight: 700;
+}
+input {
+	width: 50%;
+	height: 80%;
+	float : left;
+}
+.input_wrap{
+	padding: 5px 20px;
+}
+label{
+    display: block;
+    margin: 10px 0;
+    font-size: 20px;	
+}
+input{
+	padding: 5px;
+    font-size: 17px;
+}
+textarea{
+	width: 800px;
+    height: 200px;
+    font-size: 15px;
+    padding: 10px;
+    float : left;
+}
+
+/* 버튼 영역 */
+.btn_wrap{
+	text-align: center;
+	margin: 20px 0;
+}
+.btn{
+  	min-width: 150px;
+    padding: 4px 30px;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 30px;
+}
+#modifyBtn{
+	background-color: #dbdde2;
+}
+#modifyBtn:hover {
+    background-color: #c9cbd0;
+}
+#deleteBtn{
+    background-color: #f3e3e7;
+}
+
+/* footer navi 영역 */
+.footer_nav{
+	width:100%;
+	height:50px;
+	border-top: 1px solid #222;
+	border-bottom: 1px solid #ddd;
+}
+.footer_nav_container{
+	width: 100%;
+	height: 100%;
+	background-color:#fff;
+}
+.footer_nav_container>ul{
+	text-align: center;
+	font-weight: bold;
+	list-style: none;
+	position: relative;
+	padding-top: 10px;
+	line-height: 27px;
+	font-family: dotum;
+	margin-left: 10px;
+}
+.footer_nav_container>ul>li{
+	display:inline;
+	width: 45px;
+	height: 19px;
+	padding: 10px 9px 0 10px;
+}
+.footer_nav_container>ul>span{
+	margin: 0 4px;
+	color: #ddd;
+}
+/* footer 영역 */
+.footer{
+	font-size: 14px;
+	width:100%;
+	height:100px;
+	background-color:#FFF;
+	padding-bottom : 50px;
+}
+.footer_container{
+	width: 100%;
+	height: 100%;
+	margin: auto;
+}
+.footer_customer{
+	border-right: 1px solid #ddd;
+	float :left;
+	width: 350px;
+	margin-left: 20px;
+	margin-top : 20px;
+}
+.footer_bank{
+	border-right: 1px solid #ddd;
+	float :left;
+	width: 300px;
+	margin-left: 20px;
+	margin-top : 20px;
+}
+.footer_addr{
+	float :left;
+	width: 300px;
+	margin-left: 20px;
+	margin-top : 20px;
+}
+.footer_bottom{
+	width:100%;
+	height: 100%;
+	border-top: 1px solid #ddd;
+	background-color: #FFF;
+}
+.footer_copy{
+	font-size: 4px;
+	float :left;
+	width: 100%;
+	margin-left: 20px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+/* float 속성 해제 */
+.clearfix{
+	clear: both;
+}

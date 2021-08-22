@@ -1,0 +1,5 @@
+package com.vinshopmysql.service;
+
+public class PurchaseServiceImpl {
+
+}

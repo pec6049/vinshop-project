@@ -1,0 +1,5 @@
+package com.vinshopmysql.interceptor;
+
+public class ReSessionInterceptor {
+
+}

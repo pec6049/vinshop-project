@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vinshopmysql.mapper.CartMapper">
+
+	<!-- 장바구니 담기 -->
+	<insert id="cartEnroll">
+		insert into vin_cart(vinId, memberId, cartStock, addDate) values(#{vinId}, #{memberId}, #{cartStock}, sysDate());
+		<selectKey resultType="int" keyProperty="cartId" order="AFTER">
+		     SELECT LAST_INSERT_ID()        
+		</selectKey>
+	</insert>
+
+	<!-- 장바구니 리스트 -->
+	<select id="cartList" resultType="com.vinshopmysql.model.CartListVO">
+        select @rownum:=@rownum+1 as rownum, 
+        cartId, vin_cart.vinId, memberId, cartStock, addDate, vinName, 
+			cateCode, (select cateName from vin_cate where vin_clothes.cateCode=vin_cate.cateCode) as cateName,
+			vinPrice, vinDiscount, vinInfo, regDate, updateDate, vinStock
+        from (select @rownum:=0) as rownum, vin_cart 
+        join vin_clothes
+        on vin_cart.vinId = vin_clothes.vinId
+        where vin_cart.memberId = #{memberId};	  
+	</select>
+	
+	<!-- 장바구니 삭제 -->
+	<delete id="cartDelete">
+		delete from vin_cart where cartId = #{cartId} and memberId = #{memberId};
+	</delete>
+	
+	<!-- 장바구니 수량 변경 -->
+	<update id="stockChange">
+		update vin_cart set cartStock = #{cartStock} where cartId = #{cartId};
+	</update>
+	
+	<!-- 장바구니 선택 리스트 -->
+	<select id="buyList" resultType="com.vinshopmysql.model.CartListVO">
+        select @rownum:=@rownum+1 as rownum, 
+        	cartId, vin_cart.vinId,  memberId, cartStock, addDate , vinName, cateCode, 
+        	(select cateName from vin_cate where vin_clothes.cateCode=vin_cate.cateCode) as cateName,
+			vinPrice, vinDiscount, vinInfo, regDate, updateDate, vinStock
+        from (select @rownum:=0) as rownum, vin_cart 
+        join vin_clothes
+        on vin_cart.vinId = vin_clothes.vinId
+        where  cartId = #{cartId};
+	</select>
+	
+</mapper>

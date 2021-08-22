@@ -1,0 +1,14 @@
+package com.vinshopmysql.service;
+
+import java.util.List;
+
+import com.vinshopmysql.model.OrderVO;
+
+public interface PurchaseService {
+	
+	/* 주문 등록 */
+	public void ctBuy(OrderVO order) throws Exception;
+	
+	/* 장바구니 리스트 */
+	public List<OrderVO> orderList(String memberId) throws Exception;
+}

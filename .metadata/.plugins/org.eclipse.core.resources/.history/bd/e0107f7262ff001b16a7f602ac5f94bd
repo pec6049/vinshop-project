@@ -1,0 +1,33 @@
+package com.vinshopmysql.mapper;
+
+import java.util.List;
+
+import com.vinshopmysql.model.Criteria;
+import com.vinshopmysql.model.MemberVO;
+import com.vinshopmysql.model.OrderDetailVO;
+import com.vinshopmysql.model.OrderVO;
+
+public interface MyRoomMapper {
+
+	/* 주문 목록 리스트 */
+	public List<OrderVO> orderList(String memberId);
+	
+	/* 주문 목록 리스트 페이징 */
+	public List<OrderVO> orderListPaging(Criteria cri);
+
+	/* 주문 목록 상세 */
+	public List<OrderDetailVO> selectDetail(int orderId);
+	
+	/* 주문 목록 갯수 */
+	public int orderCount(Criteria cri);
+	
+	/* 구매 확정 버튼 */
+	public void shipClear(String orderId);
+	
+	/* 비밀번호 수정 */
+	public void modifyPw(MemberVO member);
+	
+	/* 회원 탈퇴 */
+	public void deleteId(MemberVO member);
+	
+}

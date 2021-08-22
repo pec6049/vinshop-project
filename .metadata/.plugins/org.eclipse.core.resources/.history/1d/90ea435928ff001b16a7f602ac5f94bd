@@ -1,0 +1,73 @@
+package com.vinshopmysql.mapper;
+
+import java.util.List;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.vinshopmysql.model.Criteria;
+import com.vinshopmysql.model.MemberVO;
+import com.vinshopmysql.model.OrderDetailVO;
+import com.vinshopmysql.model.OrderVO;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
+public class MyRoomMapperTests {
+
+	@Autowired
+	private MyRoomMapper mapper;
+	
+	/*
+	@Test
+	public void orderListTest() throws Exception{
+		String memberId = "test1";
+		List<OrderVO> list = mapper.orderList(memberId);
+	}
+	*/
+	/*
+	@Test
+	public void orderListPagingTest() throws Exception{
+		Criteria cri = new Criteria();
+		cri.setMemberId("test1");
+		
+		List<OrderVO> list = mapper.orderListPaging(cri);
+	}
+	*/
+	/* 주문목록 상세 */
+	/*
+	@Test
+	public void selectDetailTest() throws Exception{
+		int orderId = 3;
+		List<OrderDetailVO> list = mapper.selectDetail(orderId);
+	}
+	*/
+	
+	/* 주문 갯수 */
+	/*
+	@Test
+	public void orderCountTest() throws Exception{
+		String memberId = "test1";
+		mapper.orderCount(memberId);
+	}
+	*/
+	/*
+	@Test
+	public void modifyPw() throws Exception{
+		MemberVO vo = new MemberVO();
+		vo.setMemberId("test");
+		vo.setMemberPw("test");
+		
+		mapper.modifyPw(vo);
+	}
+	*/
+	@Test
+	public void deleteId() throws Exception{
+		String memberId = "test";
+		
+		mapper.deleteId(memberId);
+	}
+	
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vinshopmysql.mapper.AttachMapper">
+
+	<select id="getAttachList" resultType="com.vinshopmysql.model.AttachImageVO">
+		select * from vin_image where vinId = #{vinId}
+	</select>
+	
+	
+</mapper>

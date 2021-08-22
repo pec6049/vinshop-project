@@ -1,0 +1,12 @@
+1623828585149	Rename type 'JDBCTest'
+1623841210876	Rename type 'Timemapper'
+1623841232190	Delete element
+1623907314488	Move 'join.jsp' to 'member'
+1623907317490	Move 'login.jsp' to 'member'
+1623907355460	Move 'login.css' to 'member'
+1623907357470	Move 'join.css' to 'member'
+1623919637414	Rename package 'com.vintagemysql.mapper'
+1623919660652	Rename type 'MemberMapper'
+1623920667967	Rename package 'com.vintagemysql.mapper'
+1623920681878	Rename package 'com.vintagemysql.model'
+1623920692864	Rename package 'com.vintagemysql.service'

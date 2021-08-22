@@ -1,0 +1,68 @@
+package com.vinshopmysql.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.vinshopmysql.mapper.PurchaseMapper;
+import com.vinshopmysql.model.OrderVO;
+
+import lombok.extern.log4j.Log4j;
+
+@Service
+@Log4j
+public class PurchaseServiceImpl implements PurchaseService {
+
+	@Autowired
+	PurchaseMapper purchasemapper;
+	
+	@Transactional
+	@Override
+	public void ctBuy(OrderVO order) throws Exception {
+		
+		log.info("서비스진입");
+		
+		// 주문 등록
+		purchasemapper.ctPurchase(order);
+		log.info("주문등록 완료");
+		
+		// 주문상세 등록
+		order.getoDetail().forEach(attach ->{
+			attach.setOrderId(order.getOrderId());
+			purchasemapper.ctPurchaseDetail(attach);
+		});
+		
+		log.info("주문상세 등록 완료");
+		log.info("cartId  :   "+ order.getCartId().get(0));
+		log.info("memberId  :   "+ order.getMemberId());
+		
+		// 장바구니 삭제
+		List<Integer> cart = order.getCartId();
+		log.info("cartID존재? : " + cart);
+		if(!cart.isEmpty()) {
+			order.getCartId().forEach(cartId ->{
+				purchasemapper.cartDelete(cartId); 
+				log.info("forEach" + cartId);
+			});
+		}
+		
+		// 주문제품 구입비용 차감
+		log.info("구입 비용" + order.getTotalPrice());
+		purchasemapper.deductionMoney(order);
+		log.info("비용 차감 완료");
+		
+		// 주문제품 제고 차감
+		log.info("주문제품 차감 시작");
+
+		order.getoDetail().forEach(attach ->{
+			purchasemapper.deductionStock(attach);
+			System.out.println(attach);
+		});
+		
+		log.info("제품 삭제 완료");
+		log.info("서비스 종료");
+	}
+	
+}

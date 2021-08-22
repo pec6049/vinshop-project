@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vinshopmysql.mapper.MyRoomMapper">
+
+	<!-- 회원 주문 목록 리스트 -->
+	<select id="orderList" resultType="com.vinshopmysql.model.OrderVO">
+		select orderId, memberId, orderRec, memberAddr1, memberAddr2, memberAddr3, orderPhone, orderDate, shipPrice, totalPrice, 
+		(select definition from vin_order_state where vin_order_state.orderState = vin_order.orderState) as state
+		,shipDate, clearDate 
+		from vin_order where memberId = #{memberId};
+	</select>
+
+</mapper>

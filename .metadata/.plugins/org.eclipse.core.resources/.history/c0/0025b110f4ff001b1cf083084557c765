@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.vinshopmysql.mapper.MemberMapper">
+	<!-- 회원가입 -->
+	<insert id="memberJoin">
+		insert into vin_member values(#{memberId}, #{memberPw}, #{memberName},#{memberMail}, #{memberAddr1}, #{memberAddr2}, #{memberAddr3}, 0, sysdate(), 100000, 5000, #{memberPhone})
+	</insert>
+	
+	<!-- 아이디 중복검사 -->
+	<select id="idCheck" resultType="int">
+		select count(*) from vin_member where memberId = #{memberId}
+	</select>
+	
+	<!-- 로그인 -->
+    <select id="memberLogin" resultType="com.vinshopmysql.model.MemberVO">
+    	select memberId, memberPw, memberName, adminck, money, point 
+    	from vin_member 
+    	where memberId = #{memberId}
+    </select>
+    
+    <!-- 회원 상세 정보 -->
+	<select id="memberGetDetail" resultType="com.vinshopmysql.model.MemberVO">
+		select memberId, memberPw, memberName, memberPhone, memberMail, memberAddr1, memberAddr2, memberAddr3
+		from vin_member
+		where memberId = #{memberId}
+	</select>
+	
+	<!-- 회원정보 가져오기 -->
+	<select id="importInfo" resultType="com.vinshopmysql.model.MemberVO">
+	 	select * from vin_member where memberId= #{memberId};
+	</select>
+	
+</mapper>

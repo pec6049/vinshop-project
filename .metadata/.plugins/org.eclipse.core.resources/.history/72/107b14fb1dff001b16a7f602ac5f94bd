@@ -1,0 +1,233 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Vintage Shop</title>
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/resources/css/myRoom/memberInfo.css">
+</head>
+<body>
+	
+	<div class="wrapper">
+        <div class="wrap">
+            <!-- gnv_area -->	
+            <div class="top_gnb_area">
+            	<div class="logo_area">
+					<a href="/main"><img src="../resources/img/VS_logo.png"></a>
+				</div>
+                <ul class="list">	
+                    <li><a href="/main">메인 페이지</a></li>
+                    <li><a href="/member/logout.do">로그아웃</a></li>
+                    <li>
+                        <a href="/member/myRoom">마이룸</a>
+                    </li>
+                    <li>
+                        장바구니
+                    </li>
+                    <li>
+                    	<a href="/board/list">고객센터
+                    </li>
+                </ul>
+            </div>
+            <div class="navi_bar_area">
+				<ul class="list">
+					<li>
+						<a href="/menu/all">ALL</a>
+	                </li>
+					<li>
+						<a href="/menu/outer">OUTER</a>
+	                </li>
+	                <li>
+	                	<a href="/menu/top">TOP</a>
+	                </li>
+	                <li>
+	                	<a href="/menu/bottom">BOTTOM</a>
+	                </li>
+	                <li>
+	                	<a href="/menu/onepiece">ONEPIECE</a>
+	                </li>
+	                <li>
+	                	<a href="/menu/shoesbags">SHOES&BAGS</a>
+	                </li>
+	                <li>
+	                	<a href="/menu/acc">ACC</a>
+	                </li>
+				</ul>
+			</div>
+			
+			<!-- 마이룸 영역 -->
+            <div class="member_top_wrap">
+                <span>마이룸 페이지</span>
+            </div>
+            
+			<!-- contents-area -->
+	        <div class="member_wrap">
+	        	<!-- 네비영역 -->
+	            <div class="member_navi_wrap">
+		           <ul>
+		               <li>
+		                   <a class="member_list_01" href="/member/memberInfo">비밀번호 수정</a>
+		               </li>
+		               <li>
+				           <a class="member_list_02" href="/myRoom/shipInfo">주문/배송 조회</a>
+			           </li>                                                                                           
+		           </ul>
+	            </div>
+				
+				<div class="member_content_wrap">
+					<div class="member_content_subject">
+						<span>비밀번호 수정</span>
+					</div>
+					<div class="member_content_main">
+						<div id="member_content_1">
+							<form method="post" id="modify_form">
+								<h3> 새로운 비밀번호</h3>
+								<div id="top_2_pw"><input type="password" name="password" id="memberPw"></div>
+								<span id="top_2_pw_re"></span>
+								<span id="final_pw_ck">비멀번호를 입력해주세요.</span>
+								<h3>비밀번호 재확인</h3>
+								<div id="top_2_pwc"><input type="password" id="memberPw2"></div>
+								<span id="top_2_pwc_re">비밀번호가 일치합니다.</span>
+								<span id="top_2_pwc_re2">비밀번호가 일치하지 않습니다.</span>
+								<span id="final_pwck_ck">비멀번호 제확인을 입력해주세요.</span>								
+								<button id="modify_btn">비밀번호 수정</button>
+							</form>
+						</div>
+					</div>	
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			
+			<!-- Footer 영역 -->
+			<div class="footer_nav">
+				<div class="footer_nav_container">
+					<ul>
+						<li>
+							<a href="../shopinfo/aboutus">ABOUT US</a>
+						</li>
+						<span class="line">|</span>
+						<li>
+							<a href="../shopinfo/agreement">AGREEMENT</a>
+						</li>
+						<span class="line">|</span>
+						<li>
+							<a href="../shopinfo/policy">PRIVACY POLICY</a>
+						</li>
+					</ul>
+				</div>
+			</div> <!-- class="footer_nav" -->
+			
+			<div class="footer">
+				<div class="footer_container">
+					<div class="footer_customer">
+						CUSTOMER CENTER
+						<br>
+						<br>
+						<strong>010-2663-9406</strong>
+						<br>
+						MON-FRI 10:00~17:30		LUNCH 12:00~13:00
+						<br>
+						SAT / SUN / HOLIDAY CLOSE
+					</div>
+					<div class="footer_bank">
+						BANK INFO
+						<br>
+						<br>
+						신한 : 110-123-456789
+						<br>
+						농협 : 312-1234-1234-12
+						<br>
+						<strong>예금주 : 박은채</strong>
+					</div>
+					<div class="footer_addr">
+						RETURN & EXCHANGE
+						<br>
+						<br>
+						충북 청주시 상당구 월평로221 103동 1301호
+						<br>
+						CJ대한통운(1588-1255)
+					</div>
+				</div>
+			</div> <!-- class="footer" -->
+				
+			<div class="footer_bottom">
+				<div class="footer_copy">
+					COMPANY : VINSHOP / OWNER : 박은채 / ADDRESS : 28781 충청북도 청주시 상당구 월평로 221 (용암동) 103동 1301호
+					<br>
+					CALL : 010-2663-9406 / E-MAIL : pec6049@naver.com / BUSINESS LICENSE : 123-45-67890 / MALL ORDER LICENSE : 제2021-충북청주-0000
+					<br>
+					COPYRIGHT © VINSHOP ALL RIGHTS RESERVED.
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			
+		</div>	<!-- class="wrap" -->
+	</div>	<!-- class="wrapper" -->
+
+	<script>
+		
+	$(document).ready(function(){
+		
+		$('#modify_btn').on("click",function(e){
+			e.preventDefault();
+			
+			var memberPw1 = $('#memberPw').val();
+			var memberPw2 = $('#memberPw2').val();
+			
+			// 비밀번호 입력 확인
+			var check = false;
+			
+			// 비밀번호 재입력 입력 확인
+			var check2 = false;
+	
+			$('#modify_btn').css("disabled", "false");
+			
+			if(memberPw1 == ""){
+				$('#final_pw_ck').css("display","block");
+			} else {
+				$('#final_pw_ck').css("display","none");
+				check = true;
+			}
+			
+			if(memberPw2 != ""){
+				check2 = true;
+				$('#final_pwck_ck').css("display","none");
+			} else{
+				$('#final_pwck_ck').css("display","block");
+			}
+			
+			if(check && check2){
+				alert("비밀번호 변경에 성공하였습니다. 다시 로그인 해주십시오");
+				
+				$('#modify_btn').css("disabled", "true");
+				$('#modify_form').submit();
+			}
+		});
+		
+		// 비밀번호 중복검사
+		$('#memberPw2').on("propertychange change keyup paste input",function(){
+			var memberPw1 = $('#memberPw').val();
+			var memberPw2 = $('#memberPw2').val();
+			
+			if(memberPw1 == memberPw2 && memberPw != ""&& memberPw2 != ""){
+				$('#top_2_pwc_re2').css("display","none");
+				$('#top_2_pwc_re').css("display","block");
+				
+			}else{
+				$('#top_2_pwc_re2').css("display","block");
+				$('#top_2_pwc_re').css("display","none");
+			}
+		});
+	});
+	
+	</script>
+
+</body>
+</html>

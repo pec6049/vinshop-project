@@ -1,0 +1,339 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Vintage Shop</title>
+<link rel="stylesheet" href="../resources/css/purchase/buy.css">
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>  
+</head>
+<body>
+
+	<div class="wrapper">
+		<div class="wrap">
+			<div class="top_gnb_area">
+				<div class="logo_area">
+					<a href="/main"><img src="../resources/img/VS_logo.png"></a>
+				</div>
+				<ul class="list">
+					<c:if test = "${member == null}">
+		                <li >
+		                    <a href="../member/login">로그인</a>
+		                </li>
+		                <li>
+		                    <a href="../member/join">회원가입</a>
+		                </li>
+	                </c:if>
+	                <c:if test="${member != null }">
+	                	<c:if test="${member.adminCk == 1 }">
+	                        <li><a href="../admin/main">관리자 페이지</a></li>
+	                    </c:if>                
+	                    <li>
+	                        <a id="gnb_logout_button">로그아웃</a>
+	                    </li>
+	                    <li>
+	                        <a href="/member/myRoom">마이룸</a>
+	                    </li>
+	                    <li>
+	                        <a href="/order/cart">장바구니</a>
+	                    </li>
+	                </c:if> 
+	                <li>
+	                    <a href="/board/list">고객센터</a>
+	                </li>            
+	            </ul>
+			</div>
+	
+			<div class="navi_bar_area">
+				<ul class="list">
+					<li>
+						<a href="/menu/all">ALL</a>
+	                </li>
+					<li>
+						<a href="/menu/outer">OUTER</a>
+	                </li>
+	                <li>
+	                	<a href="/menu/top">TOP</a>
+	                </li>
+	                <li>
+	                	<a href="/menu/bottom">BOTTOM</a>
+	                </li>
+	                <li>
+	                	<a href="/menu/onepiece">ONEPIECE</a>
+	                </li>
+	                <li>
+	                	<a href="/menu/shoesbags">SHOES&BAGS</a>
+	                </li>
+	                <li>
+	                	<a href="/menu/acc">ACC</a>
+	                </li>
+				</ul>
+			</div>
+			
+			<!-- 주문정보 출력 영역 -->
+			<div class="content_area">
+				<div class="content_subject">
+					<span>ORDER SUCCESS</span>
+				</div>
+				<div class="order_success_area">
+					<span>고객님의 주문이 완료 되었습니다.</span>
+					<br>
+					주문내역 및 배송에 관한 안내는 주문조회를 통하여 확인 가능합니다.
+					<br>
+					<br>
+					주문번호 :
+					주문일자 :
+				</div>
+				<div class="content_container">
+					<form method="post" action="/purchase/buy" id="buy_form">
+						<div class="main_buy">
+							<div class="main_list">
+								<div class="main_list_subject">
+									<span>주문 상품 정보</span>
+								</div>
+								<table>
+									<thead>
+										<tr id="firstrow">
+											<td class="main_list_head_col1" colspan="2">
+												상품정보
+											</td>
+											<td class="main_list_head_col2">
+												판매가
+											</td>
+											<td class="main_list_head_col3">
+												수량
+											</td>
+											<td class="main_list_head_col4">
+												합계
+											</td>
+										</tr>
+									</thead>
+									<tbody>
+										<c:set var="i" value="0"/> 
+										<!-- 가격 총합 -->
+										<c:set var="finalTotalPrice" value="0"/>
+										<c:forEach items="${orderlist}" var="olist">
+										<tr>
+											<td id="main_list_col1${i}" class="main_list_col1" >
+											<input type="hidden" id="vinId${i}" value="${list.vinId}">
+												이미지
+												<script>
+												/* 상품 이미지 가져오기 */
+											    (function(){
+													var vinId = $("#vinId${i}").val();
+													
+													//alert(vinId);
+													$.getJSON("/getPcover",{vinId:vinId}, function(arr){
+														console.log(arr);
+														
+														var str = "";
+														$(arr).each(function(i, attach){
+														
+															var fileCallPath = encodeURIComponent(attach.uploadPath + "/s_" + attach.uuid + "_" + attach.fileName);
+															
+															str += "<img src='/display?fileName=" + fileCallPath + "'>";
+															
+															return false;
+														});
+														$("#main_list_col1${i}").html(str);
+														
+													});// end getJSON
+												})();// end function
+												</script>
+											</td>
+											<td class="main_list_col2">
+												${list.vinName}
+												상품이름		
+											</td>
+											<td class="main_list_col3">
+												<!-- 각 제품의 할인된가격 총합 -->
+												<c:set var="discountPrice" value="0"/>
+												<!-- 할인된가격 * 수량 -->
+												<c:set var="discountPriceStock" value="0"/>
+												
+												<c:set var="discountPrice" value="${list.vinPrice * (1-list.vinDiscount)} "/>
+												<c:set var="discountPriceStock" value="${(list.vinPrice * (1-list.vinDiscount)) * list.cartStock }"/>
+												 
+												<div><strong>${discountPrice}</strong>원</div>
+											</td>
+											<td class="main_list_col4">
+												수량 ${list.cartStock}개
+											</td>
+											<td class="main_list_col5">
+												${list.vinPrice * list.cartStock}원
+												<c:set var="finalTotalPrice" value="${finalTotalPrice + discountPriceStock}"/>
+											</td>
+										</tr>
+											<input type="hidden" name="oDetail[${i }].vinId" value="${list.vinId}">
+											<input type="hidden" name="oDetail[${i }].amount" value="${list.cartStock}">
+											<input type="hidden" name="cartId" value="${list.cartId}">
+										<c:set var="i" value="${i+1}" />
+										</c:forEach>
+									</tbody>
+								</table>
+							</div>
+							<div class="main_buy_info">
+								<div class="main_buy_info_subject">
+									<span>구매자 정보</span>
+								</div>
+								<table>
+									<colgroup>
+										<col width="30%">
+										<col width="*">
+									</colgroup>
+									<tr>
+										<th id="col1">
+											주문자
+										</th>
+										<td id="col2">
+											${memberinfo.memberName}
+										</td>
+									</tr>
+									<tr>
+										<th id="col1">
+											주소
+										</th>
+										<td id="col2">
+											${memberinfo.memberAddr1}
+											<br>
+											${memberinfo.memberAddr2}
+											<br>
+											${memberinfo.memberAddr3}
+										</td>
+									</tr>
+									<tr>
+										<th id="col1">
+											휴대폰번호
+										</th>
+										<td id="col2">
+											${memberinfo.memberPhone}
+										</td>
+									</tr>
+									<tr>
+										<th id="col1">
+											이메일
+										</th>
+										<td id="col2">
+											${memberinfo.memberMail}
+										</td>
+									</tr>
+								</table>
+							</div>
+							<div class="main_buy">
+								<div class="main_buy_subject">
+									<span>결제정보</span>
+								</div>
+								<ul>
+									<li class="total_li">
+										<c:set var="finalTotalPrice" value="${finalTotalPrice+shipPrice }"/>
+										<strong id="label">최종 결제금액</strong> <strong id="label_result"><span id="number"><fmt:formatNumber value="${finalTotalPrice}" pattern="#,###"/></span>원</strong>
+										<fmt:parseNumber value="${finalTotalPrice}" integerOnly="true" var="finalTotalPrice" />
+										<div class="clearfix"></div> 
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+					</form>
+				</div> <!-- content_container -->
+			</div>
+			
+			<!-- Footer 영역 -->
+			<div class="footer_nav">
+				<div class="footer_nav_container">
+					<ul>
+						<li>
+							<a href="/shopinfo/aboutus">ABOUT US</a>
+						</li>
+						<span class="line">|</span>
+						<li>
+							<a href="/shopinfo/agreement">AGREEMENT</a>
+						</li>
+						<span class="line">|</span>
+						<li>
+							<a href="/shopinfo/policy">PRIVACY POLICY</a>
+						</li>
+					</ul>
+				</div>
+			</div> <!-- class="footer_nav" -->
+			
+			<div class="footer">
+				<div class="footer_container">
+					<div class="footer_customer">
+						CUSTOMER CENTER
+						<br>
+						<br>
+						<strong>010-2663-9406</strong>
+						<br>
+						MON-FRI 10:00~17:30		LUNCH 12:00~13:00
+						<br>
+						SAT / SUN / HOLIDAY CLOSE
+					</div>
+					<div class="footer_bank">
+						BANK INFO
+						<br>
+						<br>
+						신한 : 110-123-456789
+						<br>
+						농협 : 312-1234-1234-12
+						<br>
+						<strong>예금주 : 박은채</strong>
+					</div>
+					<div class="footer_addr">
+						RETURN & EXCHANGE
+						<br>
+						<br>
+						충북 청주시 상당구 월평로221 103동 1301호
+						<br>
+						CJ대한통운(1588-1255)
+					</div>
+				</div>
+			</div> <!-- class="footer" -->
+			<div class="footer_bottom">
+				<div class="footer_copy">
+					COMPANY : VINSHOP / OWNER : 박은채 / ADDRESS : 28781 충청북도 청주시 상당구 월평로 221 (용암동) 103동 1301호
+					<br>
+					CALL : 010-2663-9406 / E-MAIL : pec6049@naver.com / BUSINESS LICENSE : 123-45-67890 / MALL ORDER LICENSE : 제2021-충북청주-0000
+					<br>
+					COPYRIGHT © VINSHOP ALL RIGHTS RESERVED.
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			
+		</div>	<!-- class="wrap" -->
+	</div>	<!-- class="wrapper" -->
+    
+    <script>
+    
+  	//이미지 넣기
+	(function(){
+		var vinId = ${bd.vinId};
+		//alert(vinId);
+		$.getJSON("/getPcover",{vinId:vinId}, function(arr){
+			console.log(arr);
+			
+			var str = "";
+			$(arr).each(function(i, attach){
+			
+				var fileCallPath = encodeURIComponent(attach.uploadPath + "/" + attach.uuid + "_" + attach.fileName);
+				
+				str += "<img src='display?fileName="+fileCallPath+"' data-path='" + attach.uploadPath+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='" + attach.image+"'>";
+				
+				return false;
+			});
+			
+			$("#image").html(str);
+			
+		});// end getJSON
+	})();// end function
+	
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vinshopmysql.mapper.ProductMapper">
+
+	<!-- 신상품 순 select -->
+	<select id="dateSelect" resultType="com.vinshopmysql.model.ClothesVO">
+		select vinId, vinName, cateCode, (select cateName from vin_cate where vin_clothes.cateCode=vin_cate.cateCode) as cateName,
+			vinPrice, vinDiscount, vinInfo, regDate, updateDate, vinStock
+		from vin_clothes order by regDate desc limit 9
+	</select>
+	
+	<!-- 전체 all select -->
+	<select id="dateAllSelect" resultType="com.vinshopmysql.model.ClothesVO">
+		select vinId, vinName, cateCode, (select cateName from vin_cate where vin_clothes.cateCode=vin_cate.cateCode) as cateName,
+			vinPrice, vinDiscount, vinInfo, regDate, updateDate, vinStock
+		from vin_clothes order by regDate desc
+	</select>
+	
+	<!-- outer select -->
+	<select id="outerSelect" resultType="com.vinshopmysql.model.ClothesVO">
+		select vinId, vinName, a.cateCode, b.cateName, b.cateParent, vinPrice, 
+			vinDiscount, vinInfo, regDate, updateDate, vinStock
+		from vin_clothes a
+		left outer join vin_cate b on a.cateCode=b.cateCode 
+		where b.cateParent = 100000
+		order by regDate desc
+	</select>
+	
+	<!-- top select -->
+	<select id="topSelect" resultType="com.vinshopmysql.model.ClothesVO">
+		select vinId, vinName, a.cateCode, b.cateName, b.cateParent, vinPrice, 
+			vinDiscount, vinInfo, regDate, updateDate, vinStock
+		from vin_clothes a
+		left outer join vin_cate b on a.cateCode=b.cateCode 
+		where b.cateParent = 200000
+		order by regDate desc
+	</select>
+	
+	<!-- bottom select -->
+	<select id="bottomSelect" resultType="com.vinshopmysql.model.ClothesVO">
+		select vinId, vinName, a.cateCode, b.cateName, b.cateParent, vinPrice, 
+			vinDiscount, vinInfo, regDate, updateDate, vinStock
+		from vin_clothes a
+		left outer join vin_cate b on a.cateCode=b.cateCode 
+		where b.cateParent = 300000
+		order by regDate desc
+	</select>
+	
+	<!-- onepiece select -->
+	<select id="onepieceSelect" resultType="com.vinshopmysql.model.ClothesVO">
+		select vinId, vinName, a.cateCode, b.cateName, b.cateParent, vinPrice, 
+			vinDiscount, vinInfo, regDate, updateDate, vinStock
+		from vin_clothes a
+		left outer join vin_cate b on a.cateCode=b.cateCode 
+		where b.cateParent = 400000
+		order by regDate desc
+	</select>
+	
+	<!-- shoes&bags select -->
+	<select id="shoesbagsSelect" resultType="com.vinshopmysql.model.ClothesVO">
+		select vinId, vinName, a.cateCode, b.cateName, b.cateParent, vinPrice, 
+			vinDiscount, vinInfo, regDate, updateDate, vinStock
+		from vin_clothes a
+		left outer join vin_cate b on a.cateCode=b.cateCode 
+		where b.cateParent = 500000
+		order by regDate desc
+	</select>
+	
+	<!-- acc select -->
+	<select id="accSelect" resultType="com.vinshopmysql.model.ClothesVO">
+		select vinId, vinName, a.cateCode, b.cateName, b.cateParent, vinPrice, 
+			vinDiscount, vinInfo, regDate, updateDate, vinStock
+		from vin_clothes a
+		left outer join vin_cate b on a.cateCode=b.cateCode 
+		where b.cateParent = 600000
+		order by regDate desc
+	</select>
+	
+	<!-- 이미지 조회 -->
+	<select id="findByVinId" resultType="com.vinshopmysql.model.AttachImageVO">
+		select * from vin_image where vinId = #{vinId}
+	</select>
+	
+	<!-- 제품 상세 -->
+   	<select id="vinDetail" resultType="com.vinshopmysql.model.ClothesVO">
+	 	select vinId, vinName, cateCode, (select cateName from vin_cate where vin_clothes.cateCode = vin_cate.cateCode) as cateName,
+			vinPrice, vinDiscount, vinInfo, regDate, updateDate, vinStock
+		from vin_clothes where vinId = #{vinId}
+  	</select>
+	
+</mapper>

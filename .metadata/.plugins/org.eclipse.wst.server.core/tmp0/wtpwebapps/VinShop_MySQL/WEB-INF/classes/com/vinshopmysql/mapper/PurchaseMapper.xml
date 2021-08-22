@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vinshopmysql.mapper.PurchaseMapper">
+	
+	<!-- 주문 등록 -->
+	<insert id="ctPurchase">
+	    <selectKey resultType="int" keyProperty="orderId" order="BEFORE">
+	        SELECT MAX(orderId)+1 FROM vin_order        
+	    </selectKey> 
+			insert into vin_order(memberId, orderRec, memberAddr1, memberAddr2, memberAddr3, orderPhone, orderDate, shipPrice, totalPrice, orderState)
+	        values(#{memberId}, #{orderRec}, #{memberAddr1}, #{memberAddr2}, #{memberAddr3}, #{orderPhone}, sysdate(), #{shipPrice}, #{totalPrice}, 0);
+	</insert>
+	
+	<!-- 주문 상세 등록 -->
+	<insert id="ctPurchaseDetail">
+		insert into vin_order_detail(orderId, vinId, amount) values(#{orderId}, #{vinId}, #{amount});
+	</insert>
+	
+	<!-- 주문제품 장바구니 삭제 -->
+	<delete id="cartDelete">
+		delete from vin_cart where cartId = #{cartId};
+	</delete>
+	
+	<!-- 주문제품 구입비용 차감 -->
+	<update id="deductionMoney">
+		update vin_member set money = money - #{totalPrice} - #{shipPrice}
+		<if test="usePoint != null">
+			+ #{usePoint}
+		</if>
+		, point = point  + #{getPoint}
+		<if test="usePoint != null">
+			- #{usePoint}
+		</if>
+		where memberId = #{memberId};
+	</update>
+	
+	<!-- 주문제품 제고 차감 -->
+	<update id="deductionStock">
+		update vin_clothes set vinStock = vinStock - #{amount} where vinId = #{vinId};
+	</update>
+	
+</mapper>
