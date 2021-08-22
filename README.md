@@ -30,7 +30,7 @@ https://youtu.be/XVxetedaOp8
  * 등록된 모든 상품을 볼 수 있는 All 메뉴와 카테고리별로 조회 가능한 Outer, Top 등의 메뉴가 있습니다.
 
 ### 메인화면(footer)
-![footer](https://user-images.githubusercontent.com/78144748/130353970-358c3a2d-b317-44f5-ae22-7b78d0b7cf26.jpg)
+![footer](https://user-images.githubusercontent.com/78144748/130358169-c611815d-e9e9-45fe-8c09-e4c56742f831.png)
 * 쇼핑몰 정보가 담긴 CONTACT를 볼 수 있습니다.
 
 ### 회원가입 & 로그인
