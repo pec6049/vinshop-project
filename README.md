@@ -33,10 +33,12 @@ https://youtu.be/XVxetedaOp8
 ![footer](https://user-images.githubusercontent.com/78144748/130358169-c611815d-e9e9-45fe-8c09-e4c56742f831.png)
 * 쇼핑몰 정보가 담긴 CONTACT를 볼 수 있습니다.
 
+
 ### 회원가입 & 로그인
 ![join](https://user-images.githubusercontent.com/78144748/130340725-be774c12-1edb-45bb-8bec-23202906a73a.png)
 * 회원가입 시, 비밀번호 인코딩(BCryptPasswordEncoder 적용)과 이메일 인증으로 가입하고 주소찾기는 다음주소 검색으로 연결합니다.
 * 로그인 시, BCryptPasswordEncoder로 인코딩 된 비밀번호 일치 여부를 판단하여 로그인합니다.
+
 
 ### 마이룸
 ![myroom](https://user-images.githubusercontent.com/78144748/130340868-d543a19b-7001-451f-9f12-4c6ed6c33586.png)
@@ -46,6 +48,7 @@ https://youtu.be/XVxetedaOp8
  * 관리자가 주문 상태 변경을 하면 배송 상태가 변경됩니다.
  * 이메일 인증 후 회원 탈퇴가 가능합니다.
  
+ 
 ### 장바구니
 ![cart](https://user-images.githubusercontent.com/78144748/130341076-64accc4f-5dbd-47fb-8bca-ac421473f9d2.png)
 * 장바구니 추가된 상품 리스트를 조회할 수 있습니다.
@@ -53,17 +56,20 @@ https://youtu.be/XVxetedaOp8
 * 주문을 할 수 있는 주문하기 버튼이 있습니다.
  * 배송비는 3만원 이상 구매 시 무료배송
 
+
 ### 주문하기
 ![order](https://user-images.githubusercontent.com/78144748/130341171-55543172-98dc-4e85-a2dc-b168a0d161fa.png)
 * 주문하는 상품 리스트와 회원정보를 불러옵니다.
 * 새로운 배송 주소를 입력할 수 있습니다.
 * 회원가입 시 적립된 5000포인트를 사용할 수 있습니다.
 
+
 ### 고객센터
 ![customercenter](https://user-images.githubusercontent.com/78144748/130341242-8d961d86-544a-4733-b696-249aaa2abd8b.png)
 * 질문을 할 수 있는 게시판입니다.
 * 등록, 수정, 삭제 기능이 있습니다.
 * 글을 검색할 수 있는 검색기능이 있습니다.
+
 
 ### 관리자 페이지
 ![adminpage](https://user-images.githubusercontent.com/78144748/130341297-6e636d86-7bc1-42c9-87ed-3fb05331edd9.png)
